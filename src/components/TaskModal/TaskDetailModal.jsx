@@ -545,7 +545,7 @@ function TaskDetailModal(props) {
 					</div>
 					<div
 						className="flex items-center justify-center  px-2 ml-1 header-item"
-						// onClick={closeModal}
+						onClick={props.closeModal}
 					>
 						<div className="text-2xl font-semibold">
 							<AiOutlineClose />
@@ -570,7 +570,7 @@ function TaskDetailModal(props) {
 											taskDetailModal.assigness.map(
 												(item) => item.id
 											),
-										taskId: taskDetailModal.taskId,
+										taskId: taskDetailModal.taskId.toString(),
 										taskName: e.target.value,
 										description:
 											taskDetailModal.description,

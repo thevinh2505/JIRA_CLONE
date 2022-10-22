@@ -23,11 +23,9 @@ function App() {
 	return (
 		<Router history={history}>
 			<Suspense fallback={<Loading />}>
-		
 				<DrawerModal />
-				
 				<Switch>
-					<HomeTemplate path='/dragdrop' exact Component={DragDrop} />
+					{/* <HomeTemplate path='/dragdrop' exact Component={DragDrop} /> */}
 					<HomeTemplate path='/1' exact Component={FormAddTask}/>
 					<UserTemplate path="/signin" exact Component={SignIn} />
 					<UserTemplate path="/signup" exact Component={SignUp} />

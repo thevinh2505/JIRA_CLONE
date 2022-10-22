@@ -2,10 +2,13 @@ import Menu from "components/Menu/Menu";
 import Modal from "components/Modal/Modal";
 import Sidebar from "components/Sidebar/Sidebar";
 import React from "react";
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 
 function HomeTemplate(props) {
 	let { Component, ...restRoute } = props;
+	if (!localStorage.getItem("user")) {
+		return <Redirect to="/signin" />;
+	}
 	return (
 		<Route
 			{...restRoute}
