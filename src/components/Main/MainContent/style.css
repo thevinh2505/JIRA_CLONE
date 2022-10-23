@@ -94,3 +94,12 @@
     background-size: cover;
     background-color: rgb(235, 236, 240);
 }
+.avatar-attributor .ant-avatar{
+    width: 24px;
+    height: 24px;
+}
+.avatar-attributor .ant-avatar-string{
+    transform: scale(1) translate(-50%,-50%)!important;
+    top: 50%!important;
+    font-size: 12px!important;
+}

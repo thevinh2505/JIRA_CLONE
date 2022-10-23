@@ -19,22 +19,22 @@ import {
 	REMOVE_USER_ASSIGN,
 } from "utils/Constants/constants";
 import {
-	assignUserTaskAction,
+	deleteCommentAction,
 	getAllComment,
-	getTaskDetailAction,
 	insertCommentAction,
 	removeTaskAction,
 	removeUserFromTaskAction,
+	updateCommentAction,
 	updateDescriptionTaskDetail,
 	updateEstimateTaskDetail,
 	updatePriorityTaskDetailAction,
 	updateTaskDetailAction,
 	updateTimeTrackingAction,
 } from "redux/actions/taskDetailAction";
-import { getProjectDetailAction } from "redux/actions/projectActions";
+
 import { useEffect } from "react";
 import _ from "lodash";
-import { reverse } from "lodash";
+
 const { Option } = Select;
 const { TextArea } = Input;
 const parse = require("html-react-parser");
@@ -57,6 +57,17 @@ function TaskDetailModal(props) {
 		setIsModalOpen(false);
 	};
 
+	// state DELETE MODAL
+	const [isOpenDelete, setIsOpenDelete] = useState(false);
+	const showCommentDelete = () => {
+		setIsOpenDelete(true);
+	};
+	const handleDeleteComment = () => {
+		setIsOpenDelete(false);
+	};
+	const handleCancelComment = () => {
+		setIsOpenDelete(false);
+	};
 	// state reducer binding data
 	const { taskTypeList } = useSelector((state) => state.taskType);
 	const { taskDetailModal } = useSelector((state) => state.taskDetail);
@@ -95,10 +106,13 @@ function TaskDetailModal(props) {
 	const [visibleComment, setVisibleComment] = useState(false);
 	const [commentContent, setCommentContent] = useState("");
 
-	// state SHOW/HIDE EDIT COMMENT
-	const [visibleEditComment, setVisibleEditComment] = useState(false);
-	const [editCommentContent, setEditCommentContent] = useState("");
+	// state COMMENT ID
+	const [commentId, setCommentId] = useState("");
+	const [commentDeleteId,setCommentDeleteId]=useState('')
 	const reporterInfo = JSON.parse(localStorage.getItem("user"));
+
+	const [editComment, setEditComment] = useState("");
+
 	// RENDER FUNCTION
 	const renderDescription = () => {
 		return (
@@ -408,7 +422,7 @@ function TaskDetailModal(props) {
 		);
 	};
 
-	// HANDLE CHANGE INPUT+SELECT
+	// HANDLE CHANGE INPUT+SELECT LƯU LẠI TRÊN REDUCER,KO CALL API
 	const handleChangeInput = (e) => {
 		const { name, value } = e.target;
 		console.log("name", name, "value", value);
@@ -425,8 +439,8 @@ function TaskDetailModal(props) {
 			value: e,
 		});
 	};
-	console.log("task detail component", taskDetailModal);
-	console.log("props", props);
+	// console.log("task detail component", taskDetailModal);
+	console.log("comment id", commentId);
 	return (
 		<div className="task-modal">
 			<div className="task-modal-header">
@@ -614,7 +628,7 @@ function TaskDetailModal(props) {
 								className="w-8 h-8 mr-3"
 								src={reporterInfo.avatar}
 							/>
-							<div>
+							<div className="w-full">
 								{visibleComment ? (
 									<div>
 										<TextArea
@@ -732,7 +746,6 @@ function TaskDetailModal(props) {
 
 						{/* COMMENTS SHOW PART  */}
 						{hehe?.reverse().map((comment) => {
-							console.log("first");
 							return (
 								// 1 PERSON COMMENT
 								<div>
@@ -748,7 +761,7 @@ function TaskDetailModal(props) {
 											className="mr-3"
 											src={comment.user.avatar}
 										/>
-										<div>
+										<div className="w-full">
 											<p className="name-comment">
 												{comment.user.name}
 											</p>
@@ -756,25 +769,124 @@ function TaskDetailModal(props) {
 												4 days ago
 											</p>
 											{/* ẤN EDIT HIỆN EDIT COMMENT PART, ẤN CANCEL, SUBMIT SẼ ẨN  */}
-											<div>
-												<div className="comment-text">
-													{comment.contentComment}
-												</div>
-
-												{comment.user.name ===
-												reporterInfo.name ? (
-													<div className="flex">
-														<div className="comment-btn">
-															Edit
-														</div>
-														<div className="comment-btn">
-															Delete
-														</div>
+											{commentId === comment.id ? (
+												<div>
+													<TextArea
+														allowClear
+														className=""
+														style={{
+															height: "61px",
+															padding:
+																"8px 12px 9px",
+														}}
+														onChange={(e) => {
+															console.log(
+																e.target.value
+															);
+															if (
+																editCommentRef !==
+																null
+															) {
+																clearTimeout(
+																	editCommentRef.current
+																);
+															}
+															editCommentRef.current =
+																setTimeout(
+																	() => {
+																		setEditComment(
+																			e
+																				.target
+																				.value
+																		);
+																	},
+																	700
+																);
+														}}
+														onPressEnter={(e) => {
+															console.log(
+																e.target.value
+															);
+															dispatch(
+																updateCommentAction(
+																	commentId,
+																	editComment,
+																	dispatch
+																)
+															);
+															setCommentId("");
+														}}
+													></TextArea>
+													<div
+														className="flex"
+														style={{
+															marginTop: "-15px",
+														}}
+													>
+														<button
+															className="submit-btn mr-2"
+															onClick={() => {
+																setCommentId(
+																	""
+																);
+																dispatch(
+																	updateCommentAction(
+																		commentId,
+																		editComment,
+																		dispatch,
+																		taskId
+																	)
+																);
+															}}
+														>
+															Save
+														</button>
+														<button
+															className="cancel-btn"
+															onClick={() =>
+																setCommentId("")
+															}
+														>
+															Cancel
+														</button>
 													</div>
-												) : (
-													""
-												)}
-											</div>
+												</div>
+											) : (
+												<div>
+													<div className="comment-text">
+														{comment.contentComment}
+													</div>
+
+													{comment.user.name ===
+													reporterInfo.name ? (
+														<div className="flex">
+															<div
+																className="comment-btn"
+																onClick={() =>
+																	setCommentId(
+																		comment.id
+																	)
+																}
+															>
+																Edit
+															</div>
+															<div
+																className="comment-btn"
+																onClick={
+																	()=>{
+																		showCommentDelete()
+																		setCommentDeleteId(comment.id)
+																	}
+																}
+															>
+																Delete
+															</div>
+														</div>
+													) : (
+														""
+													)}
+												</div>
+											)}
 										</div>
 									</div>
 								</div>
@@ -1019,6 +1131,26 @@ function TaskDetailModal(props) {
 						<p>Updated at a day ago</p>
 					</div>
 				</div>
+				<Modal
+					className="delete-comment-modal"
+					title={null}
+					closable={false}
+					footer={null}
+					centered
+					open={isOpenDelete}
+					onOk={handleDeleteComment}
+					onCancel={handleCancelComment}
+				>
+					<p className="pb-6 text-2xl font-medium leading-normal">Are you sure you want to delete this comment?</p>
+					<p className="pb-6 text-base ">Once you delete, it's gone for good.</p>
+					<div className="flex" style={{marginTop:'-24px'}}>
+						<button className="submit-btn mr-2" onClick={()=>{
+							handleDeleteComment()
+							dispatch(deleteCommentAction(commentDeleteId,dispatch,taskId))
+						}}>Delete comment</button>
+						<button className="cancel-btn" onClick={handleDeleteComment}>Cancel</button>
+					</div>
+				</Modal>
 			</div>
 		</div>
 	);

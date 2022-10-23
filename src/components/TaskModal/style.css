@@ -1,33 +1,4 @@
-/* .task-modal-cover{
-    z-index: 1000;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 100%;
-    overflow: hidden auto;
-}
-.task-modal-container{
-    min-height: 100%;
-    background: rgba(9, 30, 66, 0.54);
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    padding: 50px;
-} */
 
-/* .ant-modal{
-    background: rgb(255, 255, 255);
-    border-radius: 3px;
-    box-shadow: rgb(0 0 0 / 10%) 0px 5px 10px 0px;
-    padding: 0;
-    top: 0;
-} */
-/* .ant-modal-body{
-    padding: 0;
-} */
 .ReactModal__Overlay.ReactModal__Overlay--after-open {
 	background: rgba(9, 30, 66, 0.54) !important;
 	padding: 50px !important;
@@ -254,4 +225,23 @@
 }
 .comment-btn:hover{
 	text-decoration: underline;
+}
+.delete-comment-modal{
+	width: 100%!important;
+    max-width: 600px;
+}
+.delete-comment-modal .ant-modal-content{
+	width: 100%;
+    max-width: 600px;
+
+}
+.delete-comment-modal .ant-modal-body{
+	padding: 35px 40px 40px;
+	display: inline-block;
+    width: 100%;
+    background: rgb(255, 255, 255);
+    max-width: 600px;
+    vertical-align: middle;
+    border-radius: 3px;
+    box-shadow: rgb(0 0 0 / 10%) 0px 5px 10px 0px;
 }

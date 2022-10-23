@@ -226,3 +226,30 @@ export const removeTaskAction=(taskId,dispatch,projectId)=>{
 		}
 	}
 }
+
+//update comment action
+export const updateCommentAction=(id,content,dispatch,taskId)=>{
+	return async(next)=>{
+		try{
+			const res=await instance.put(`/api/Comment/updateComment?id=${id}&contentComment=${content}`)
+			console.log(res.data.content);
+			dispatch(getAllComment(taskId))
+		}catch(err){
+			console.log(err);
+		}
+	}
+}
+
+// delete comment
+export const deleteCommentAction=(id,dispatch,taskId)=>{
+	return async(next)=>{
+		try{
+			const res=await instance.delete(`/api/Comment/deleteComment?idComment=${id}`)
+			console.log(res.data.content);
+			dispatch(getAllComment(taskId))
+			notifyFunction('success','Delete comment successfully!')
+		}catch(err){
+			console.log(err);
+		}
+	}
+}

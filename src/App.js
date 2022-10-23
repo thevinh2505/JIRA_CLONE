@@ -1,6 +1,6 @@
 import "./sass/index.scss";
 import { createBrowserHistory } from "history";
-import { Redirect, Router, Switch } from "react-router-dom";
+import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loading from "components/Loading/Loading";
 import UserTemplate from "templates/UserTemplate/UserTemplate";
@@ -18,6 +18,7 @@ const ProjectDetail=lazy(()=>import('pages/ProjectDetail'))
 const taskDetailModal=lazy(()=>import('components/TaskModal/TaskDetailModal'))
 const UserManagement=lazy(()=>import('pages/UserManagement'))
 const UserDetail=lazy(()=>import('pages/UserDetail'))
+const PageNotFound=lazy(()=>import('components/PageNotFound/PageNotFound'))
 export const history = createBrowserHistory();
 function App() {
 	return (
@@ -30,7 +31,7 @@ function App() {
 					<UserTemplate path="/signin" exact Component={SignIn} />
 					<UserTemplate path="/signup" exact Component={SignUp} />
 					<HomeTemplate path="/" exact Component={ProjectManagement} />
-					{/* <Route path="*" component={PageNotFound} /> */}
+				
 					<HomeTemplate
 						path="/createproject"
 						exact
@@ -46,6 +47,7 @@ function App() {
 					<HomeTemplate path='/taskDetail' Component={taskDetailModal} />
 					<HomeTemplate path='/usermanagement' Component={UserManagement} />
 					<HomeTemplate path='/userdetail/:id' Component={UserDetail} />
+					<Route path="*" component={PageNotFound} />
 					<Redirect to="/" />
 					
 				</Switch>
