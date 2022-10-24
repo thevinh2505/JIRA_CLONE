@@ -4,10 +4,8 @@ import { FiCreditCard, FiSettings, FiBox,FiTrendingUp } from "react-icons/fi";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { BiLineChart,BiTrendingUp } from "react-icons/bi";
-
+import {MdOutlineManageAccounts} from 'react-icons/md'
 import { CgDatabase } from "react-icons/cg";
-
 import "./style.css";
 function Menu() {
 	return (
@@ -164,6 +162,16 @@ function Menu() {
 					<FiSettings />
 				</div>
 				<p className="menu-item--title">Project Management</p>
+			</NavLink>
+			<NavLink
+				to="/usermanagement"
+				className="flex py-2 px-3 cursor-pointer menu-item items-center "
+				activeClassName="active"
+			>
+				<div className="menu-item--icon">
+					<MdOutlineManageAccounts />
+				</div>
+				<p className="menu-item--title">User Management</p>
 			</NavLink>
 			<div className="br-menu"></div>
 			<NavLink

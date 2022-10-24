@@ -182,7 +182,7 @@ export const assignUserTaskAction = (user) => {
 			if (err.response?.status === 404) {
 				notifyFunction(
 					"error",
-					"Only user assigned can edit this task!"
+					"Only user assigned or creator can edit this task!"
 				);
 			}
 		}

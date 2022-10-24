@@ -76,6 +76,7 @@ function TaskDetailModal(props) {
 	const { priorityList } = useSelector((state) => state.priority);
 	const { projectDetail } = useSelector((state) => state.project);
 	const { commentList } = useSelector((state) => state.taskDetail);
+	
 	const hehe = [...commentList];
 	const projectId = projectDetail?.id;
 	// console.log("task detail", taskDetailModal);
@@ -111,7 +112,7 @@ function TaskDetailModal(props) {
 	const [commentId, setCommentId] = useState("");
 	const [commentDeleteId, setCommentDeleteId] = useState("");
 	const reporterInfo = JSON.parse(localStorage.getItem("user"));
-
+	const reporter=taskDetailModal?.members
 	const [editComment, setEditComment] = useState("");
 
 	// RENDER FUNCTION

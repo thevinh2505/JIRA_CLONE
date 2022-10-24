@@ -15,16 +15,17 @@ import { useEffect } from "react";
 import { getAllStatusAction } from "redux/actions/statusAction";
 import { getAllPriorityAction } from "redux/actions/priorityAction";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { getUserAction } from "redux/actions/userAction";
 const { Group } = Avatar;
 
 function MainContent() {
 	const { projectDetail } = useSelector((state) => state.project);
 	const dispatch = useDispatch();
 	const [isOpen, setIsOpen] = useState(false);
-
 	useEffect(() => {
 		dispatch(getAllStatusAction);
 		dispatch(getAllPriorityAction);
+		dispatch(getUserAction(projectDetail.creator?.id))
 	}, []);
 
 	const closeModal = () => {

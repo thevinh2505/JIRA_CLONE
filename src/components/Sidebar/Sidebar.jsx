@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { HiPlus } from "react-icons/hi";
 import "./style.css";
 import { OPEN_FORM_ADD_TASK } from "utils/Constants/constants";
 import FormAddTask from "components/Forms/FormAddTask/FormAddTask";
 import { useDispatch } from "react-redux";
-
+import {BiLogOut} from 'react-icons/bi'
 function Sidebar() {
 	const dispatch=useDispatch()
+	const history=useHistory()
 	const handleAddTask=()=>{
 		const action = {
 			type: OPEN_FORM_ADD_TASK,
@@ -16,6 +17,11 @@ function Sidebar() {
 			Component: <FormAddTask />,
 		};
 		dispatch(action)
+	}
+	const handleLogOut=()=>{
+		localStorage.removeItem('user')
+		localStorage.removeItem('token')
+		history.push('/signin')
 	}
 	return (
 		<div className="sidebar">
@@ -89,6 +95,14 @@ function Sidebar() {
 					</div>
 					<p className="text-xs font-bold inline-block ">
 						CREATE TASK
+					</p>
+				</div>
+				<div className="sidebar-item flex items-center mt-96"  onClick={handleLogOut}>
+					<div className="sidebar-icon inline-block">
+						<BiLogOut className="font-bold" />
+					</div>
+					<p className="text-xs font-bold inline-block ">
+						LOG OUT
 					</p>
 				</div>
 			</aside>
