@@ -1,4 +1,4 @@
-import "./sass/index.scss";
+
 import { createBrowserHistory } from "history";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { lazy, Suspense } from "react";
@@ -6,13 +6,9 @@ import Loading from "components/Loading/Loading";
 import UserTemplate from "templates/UserTemplate/UserTemplate";
 import HomeTemplate from "templates/HomeTemplate/HomeTemplate";
 import DrawerModal from "components/DrawerModal/DrawerModal";
-
-
 import LoadingState from "components/LoadingState/LoadingState";
-
 const SignIn = lazy(() => import("pages/SignIn"));
 const SignUp = lazy(() => import("pages/SignUp"));
-
 const CreateProject = lazy(() => import("pages/CreateProject"));
 const ProjectManagement = lazy(() => import("pages/ProjectManagement"));
 const ProjectDetail=lazy(()=>import('pages/ProjectDetail'))
@@ -22,9 +18,6 @@ const UserDetail=lazy(()=>import('pages/UserDetail'))
 const PageNotFound=lazy(()=>import('components/PageNotFound/PageNotFound'))
 export const history = createBrowserHistory();
 function App() {
-	if (!localStorage.getItem("user")) {
-		return <Redirect to="/signin" />;
-	}
 	return (
 		<Router history={history}>
 			<LoadingState/>
