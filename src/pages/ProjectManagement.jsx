@@ -362,9 +362,9 @@ function ProjectManagement() {
 					marginBottom: 16,
 				}}
 			>
-				<Button onClick={setAgeSort}>Sort age</Button>
+				{/* <Button onClick={setAgeSort}>Sort age</Button>
 				<Button onClick={clearFilters}>Clear filters</Button>
-				<Button onClick={clearAll}>Clear filters and sorters</Button>
+				<Button onClick={clearAll}>Clear filters and sorters</Button> */}
 			</Space>
 			<Table
 				rowKey={"id"}

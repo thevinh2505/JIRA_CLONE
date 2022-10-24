@@ -1,6 +1,7 @@
 import { instance } from "api/instance";
 import { notifyFunction } from "utils/Notification/Notification";
 import { CLOSE_DRAWER } from "./drawerModalActions";
+import { HIDE_LOADING, SHOW_LOADING } from "./LoadingAction";
 
 export const SET_PROJECT_LIST = "project/SET_PROJECT_LIST";
 export const GET_PROJECT_DETAIL = "project/GET_PROJECT_DETAIL";
@@ -33,6 +34,7 @@ export const updateProjectAction = (value, dispatch) => {
 			next({
 				type: CLOSE_DRAWER,
 			});
+			
 		} catch (err) {
 			console.log(err);
 			notifyFunction("error", "Update project failed!");
@@ -42,8 +44,11 @@ export const updateProjectAction = (value, dispatch) => {
 
 // delete PROJECT
 export const deleteProjectAction = (id, dispatch) => {
-	return async () => {
+	return async (next) => {
 		try {
+			next({
+				type:SHOW_LOADING
+			})
 			const res = await instance.request({
 				url: "/api/Project/deleteProject",
 				method: "DELETE",
@@ -51,12 +56,18 @@ export const deleteProjectAction = (id, dispatch) => {
 					projectId: id,
 				},
 			});
-			dispatch(setProjectListAction);
+			await dispatch(setProjectListAction);
+			next({
+				type:HIDE_LOADING
+			})
 			console.log(res);
 			notifyFunction("success", "Delete project successfully", "");
 		} catch (err) {
 			console.log(err);
 			notifyFunction("error", "Delete project failed", "");
+			next({
+				type:HIDE_LOADING
+			})
 		}
 	};
 };
@@ -65,11 +76,17 @@ export const deleteProjectAction = (id, dispatch) => {
 export const assignUserProjectAction = (value, dispatch) => {
 	return async (next) => {
 		try {
+			next({
+				type:SHOW_LOADING
+			})
 			const res = await instance.post(
 				"/api/Project/assignUserProject",
 				value
 			);
-			dispatch(setProjectListAction);
+			await dispatch(setProjectListAction);
+			next({
+				type:HIDE_LOADING
+			})
 			notifyFunction("success", "Add user to project successfully!");
 			console.log(res.data.content);
 		} catch (err) {
@@ -78,6 +95,9 @@ export const assignUserProjectAction = (value, dispatch) => {
 				"You don't have permission to add this user to the project!"
 			);
 			console.log(err);
+			next({
+				type:HIDE_LOADING
+			})
 		}
 	};
 };
@@ -127,19 +147,19 @@ export const getProjectDetailAction = (id) => {
 export const createTaskAction = (value, dispatch) => {
 	return async (next) => {
 		try {
-			const res = await instance.post("/api/Project/createTask", value);
-			// const res=await instance.request({
-			// 	url:'/api/Project/createTask',
-			// 	method:"POST",
-			// 	data:{
-			// 		model:value
-			// 	}
-			// })
-			console.log("create", res.data.content);
 			next({
-				type: CLOSE_DRAWER,
-			});
-			dispatch(getProjectDetailAction(value.projectId));
+				type:SHOW_LOADING
+			})
+			const res = await instance.post("/api/Project/createTask", value);
+			console.log("create", res.data.content);
+			
+			 dispatch(getProjectDetailAction(value.projectId));
+			// next({
+			// 	type: CLOSE_DRAWER,
+			// });
+			// next({
+			// 	type:HIDE_LOADING
+			// })
 			notifyFunction("success", "Create task successfully!");
 		} catch (err) {
 			if (err.response.status === 403) {
@@ -152,6 +172,9 @@ export const createTaskAction = (value, dispatch) => {
 				console.log(err);
 				// notifyFunction("error", `${err.response.data?.message}`);
 			}
+			// next({
+			// 	type:HIDE_LOADING
+			// })
 		}
 	};
 };

@@ -1,13 +1,21 @@
 import { instance } from "api/instance";
 import swal from "sweetalert";
+import { notifyFunction } from "utils/Notification/Notification";
+import { HIDE_LOADING, SHOW_LOADING } from "./LoadingAction";
 
 export const SIGN_UP = "auth/SIGN_UP";
 export const SIGN_IN = "auth/SIGN_IN";
 
 export const signUpAction = (value, history) => {
-	return async () => {
+	return async (next) => {
 		try {
+			next({
+				type:SHOW_LOADING,
+			})
 			const res = await instance.post("/api/Users/signup", value);
+			next({
+				type:HIDE_LOADING,
+			})
 			console.log(res.data.content, "sign up");
 			swal({
 				title: "Sign up successfully! ",
@@ -19,6 +27,15 @@ export const signUpAction = (value, history) => {
 			history.push("/signin");
 		} catch (err) {
 			console.log(err);
+			if(err.response.status===400){
+				swal({
+					title: "Sign up successfully! ",
+					text: `${err.response.data.message}`,
+					icon: "error",
+					button: "OK",
+					timer: 1000,
+				});
+			}
 		}
 	};
 };
@@ -44,7 +61,7 @@ export const signInAction = (value, history) => {
 				text: `Hi ${res.data.content.name}`,
 				icon: "success",
 				button: "OK",
-				timer: 1500,
+				timer: 1000,
 			});
 			history.push("/");
 		} catch (err) {
@@ -53,7 +70,7 @@ export const signInAction = (value, history) => {
 				text: `Wrong password or email`,
 				icon: "error",
 				button: "OK",
-				timer: 1500,
+				timer: 1000,
 			});
 		}
 	};

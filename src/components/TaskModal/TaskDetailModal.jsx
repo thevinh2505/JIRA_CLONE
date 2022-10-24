@@ -28,6 +28,7 @@ import {
 	updateDescriptionTaskDetail,
 	updateEstimateTaskDetail,
 	updatePriorityTaskDetailAction,
+	updateStatusTaskDetailAction,
 	updateTaskDetailAction,
 	updateTimeTrackingAction,
 } from "redux/actions/taskDetailAction";
@@ -108,7 +109,7 @@ function TaskDetailModal(props) {
 
 	// state COMMENT ID
 	const [commentId, setCommentId] = useState("");
-	const [commentDeleteId,setCommentDeleteId]=useState('')
+	const [commentDeleteId, setCommentDeleteId] = useState("");
 	const reporterInfo = JSON.parse(localStorage.getItem("user"));
 
 	const [editComment, setEditComment] = useState("");
@@ -449,7 +450,32 @@ function TaskDetailModal(props) {
 						<Select
 							style={{ width: "150px" }}
 							optionFilterProp="label"
-							onChange={(e) => handleChangeSelect(e, "typeId")}
+							onChange={(e) => {
+								console.log(e);
+								handleChangeSelect(e, "typeId")
+								dispatch(
+									updateTaskDetailAction({
+										listUserAsign:
+											taskDetailModal.assigness.map(
+												(item) => item.id
+											),
+										taskId: taskDetailModal.taskId.toString(),
+										taskName: taskDetailModal.taskName,
+										description:
+											taskDetailModal.description,
+										statusId: taskDetailModal.statusId,
+										originalEstimate:
+											taskDetailModal.originalEstimate,
+										timeTrackingSpent:
+											taskDetailModal.timeTrackingSpent,
+										timeTrackingRemaining:
+											taskDetailModal.timeTrackingRemaining,
+										projectId: projectId,
+										typeId: e,
+										priorityId: taskDetailModal.priorityId,
+									})
+									)
+							}}
 						>
 							{taskTypeList?.map((task) => {
 								switch (task.taskType) {
@@ -575,32 +601,33 @@ function TaskDetailModal(props) {
 						<input
 							className="task-name-input"
 							name="taskName"
+							disabled
 							value={taskDetailModal?.taskName}
-							onChange={(e) => {
-								handleChangeInput(e);
-								dispatch(
-									updateTaskDetailAction({
-										listUserAsign:
-											taskDetailModal.assigness.map(
-												(item) => item.id
-											),
-										taskId: taskDetailModal.taskId.toString(),
-										taskName: e.target.value,
-										description:
-											taskDetailModal.description,
-										statusId: taskDetailModal.statusId,
-										originalEstimate:
-											taskDetailModal.originalEstimate,
-										timeTrackingSpent:
-											taskDetailModal.timeTrackingSpent,
-										timeTrackingRemaining:
-											taskDetailModal.timeTrackingRemaining,
-										projectId: projectId,
-										typeId: taskDetailModal.typeId,
-										priorityId: taskDetailModal.priorityId,
-									})
-								);
-							}}
+							// onChange={(e) => {
+							// 	handleChangeInput(e);
+								// dispatch(
+								// 	updateTaskDetailAction({
+								// 		listUserAsign:
+								// 			taskDetailModal.assigness.map(
+								// 				(item) => item.id
+								// 			),
+								// 		taskId: taskDetailModal.taskId.toString(),
+								// 		taskName: e.target.value,
+								// 		description:
+								// 			taskDetailModal.description,
+								// 		statusId: taskDetailModal.statusId,
+								// 		originalEstimate:
+								// 			taskDetailModal.originalEstimate,
+								// 		timeTrackingSpent:
+								// 			taskDetailModal.timeTrackingSpent,
+								// 		timeTrackingRemaining:
+								// 			taskDetailModal.timeTrackingRemaining,
+								// 		projectId: projectId,
+								// 		typeId: taskDetailModal.typeId,
+								// 		priorityId: taskDetailModal.priorityId,
+								// 	})
+							// 	);
+							// }}
 						/>
 					</div>
 
@@ -872,12 +899,12 @@ function TaskDetailModal(props) {
 															</div>
 															<div
 																className="comment-btn"
-																onClick={
-																	()=>{
-																		showCommentDelete()
-																		setCommentDeleteId(comment.id)
-																	}
-																}
+																onClick={() => {
+																	showCommentDelete();
+																	setCommentDeleteId(
+																		comment.id
+																	);
+																}}
 															>
 																Delete
 															</div>
@@ -902,7 +929,12 @@ function TaskDetailModal(props) {
 						name="statusId"
 						className="w-full"
 						onChange={(e) => {
+							console.log(e);
 							handleChangeSelect(e, "statusId");
+							dispatch(updateStatusTaskDetailAction({
+								taskId,
+								statusId:e.toString()
+							},dispatch,projectId,taskId))
 						}}
 						options={renderOptionsStatus()}
 					></Select>
@@ -1141,14 +1173,34 @@ function TaskDetailModal(props) {
 					onOk={handleDeleteComment}
 					onCancel={handleCancelComment}
 				>
-					<p className="pb-6 text-2xl font-medium leading-normal">Are you sure you want to delete this comment?</p>
-					<p className="pb-6 text-base ">Once you delete, it's gone for good.</p>
-					<div className="flex" style={{marginTop:'-24px'}}>
-						<button className="submit-btn mr-2" onClick={()=>{
-							handleDeleteComment()
-							dispatch(deleteCommentAction(commentDeleteId,dispatch,taskId))
-						}}>Delete comment</button>
-						<button className="cancel-btn" onClick={handleDeleteComment}>Cancel</button>
+					<p className="pb-6 text-2xl font-medium leading-normal">
+						Are you sure you want to delete this comment?
+					</p>
+					<p className="pb-6 text-base ">
+						Once you delete, it's gone for good.
+					</p>
+					<div className="flex" style={{ marginTop: "-24px" }}>
+						<button
+							className="submit-btn mr-2"
+							onClick={() => {
+								handleDeleteComment();
+								dispatch(
+									deleteCommentAction(
+										commentDeleteId,
+										dispatch,
+										taskId
+									)
+								);
+							}}
+						>
+							Delete comment
+						</button>
+						<button
+							className="cancel-btn"
+							onClick={handleDeleteComment}
+						>
+							Cancel
+						</button>
 					</div>
 				</Modal>
 			</div>

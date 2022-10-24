@@ -9,6 +9,7 @@ import taskType from 'redux/reducers/taskTypeReducer'
 import priority from 'redux/reducers/priorityReducer'
 import status from 'redux/reducers/statusReducer'
 import taskDetail from 'redux/reducers/taskDetailReducer'
+import loading from 'redux/reducers/loadingReducer'
 const rootReducer = combineReducers({
 	auth: authReducer,
 	edit: editReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
 	priority,
 	status,
 	taskDetail,
+	loading
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

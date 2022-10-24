@@ -15,8 +15,6 @@ import { useEffect } from "react";
 import { getAllStatusAction } from "redux/actions/statusAction";
 import { getAllPriorityAction } from "redux/actions/priorityAction";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { RiErrorWarningFill } from "react-icons/ri";
-import { MdOutlineBookmark } from "react-icons/md";
 const { Group } = Avatar;
 
 function MainContent() {
@@ -63,11 +61,11 @@ function MainContent() {
 				return;
 		}
 	};
-	const handleTaskType=(value)=>{
-		switch(value){
+	// const handleTaskType=(value)=>{
+	// 	switch(value){
 			
-		}
-	}
+	// 	}
+	// }
 	const handleDragEnd = (result) => {
 		const {projectId,taskId}=JSON.parse(result.draggableId)
 		const { source, destination, draggableId } = result;
@@ -106,7 +104,7 @@ function MainContent() {
 										<div className="main-content--col-name">
 											{item.statusName}{" "}
 											<span className="main-content--col-number">
-												{index}
+												{item?.lstTaskDeTail.length}
 											</span>
 										</div>
 										<div className="main-content-item">

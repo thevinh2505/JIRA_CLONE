@@ -2,6 +2,7 @@ import { notification } from "antd";
 import { instance } from "api/instance";
 import { SET_COMMENT_LIST, UPDATE_TASK_DETAIL } from "utils/Constants/constants";
 import { notifyFunction } from "utils/Notification/Notification";
+import { HIDE_LOADING, SHOW_LOADING } from "./LoadingAction";
 import { getProjectDetailAction } from "./projectActions";
 export const SET_TASK_DETAIL = "taskDetail/SET_TASK_DETAIL";
 // get task detail
@@ -45,12 +46,21 @@ export const updateTaskDetailAction = (taskUpdate) => {
 };
 
 // update status task detail
-export const updateStatusTaskDetailAction = (status, dispatch, projectId) => {
+export const updateStatusTaskDetailAction = (status, dispatch, projectId,taskId) => {
 	return async (next) => {
 		try {
+			next({
+				type:SHOW_LOADING,
+			})
 			const res = await instance.put("/api/Project/updateStatus", status);
 			console.log(res.data.content);
-			dispatch(getProjectDetailAction(projectId))
+			// call lại để trang project Detail bên dưới Task Modal load lại data mới
+			await dispatch(getProjectDetailAction(projectId))
+
+			await dispatch(getTaskDetailAction(taskId))
+			next({
+				type:HIDE_LOADING,
+			})
 		} catch (err) {
 			console.log(err,'err status');
 			if(err.response.status===404){
@@ -63,7 +73,7 @@ export const updateStatusTaskDetailAction = (status, dispatch, projectId) => {
 	};
 };
 
-// update status task detail
+// update priority task detail
 export const updatePriorityTaskDetailAction = (
 	priority,
 	dispatch,
@@ -71,11 +81,17 @@ export const updatePriorityTaskDetailAction = (
 ) => {
 	return async (next) => {
 		try {
+			next({
+				type:SHOW_LOADING,
+			})
 			const res = await instance.put(
 				"/api/Project/updatePriority",
 				priority
 			);
-			console.log(res.data.content);
+			next({
+				type:HIDE_LOADING,
+			})
+			
 		} catch (err) {
 			console.log(err);
 			if(err.response.status===404){
@@ -84,6 +100,9 @@ export const updatePriorityTaskDetailAction = (
 					"Only assigned users can edit this task!"
 				);
 			}
+			next({
+				type:HIDE_LOADING
+			})
 		}
 	};
 };
@@ -186,12 +205,14 @@ export const removeUserFromTaskAction = (value) => {
 export const getAllComment=(taskId)=>{
 	return async(next)=>{
 		try{
+			
 			const res=await instance.get(`/api/Comment/getAll?taskId=${taskId}`)
 			console.log(res.data.content,'comment')
 			next({
 				type:SET_COMMENT_LIST,
 				payload:res.data.content,
 			})
+			
 		}catch(err){
 			console.log(err)
 		}
@@ -201,11 +222,20 @@ export const getAllComment=(taskId)=>{
 export const insertCommentAction=(value,dispatch)=>{
 	return async(next)=>{
 		try{
+			next({
+				type:SHOW_LOADING
+			})
 			const res=await instance.post('/api/Comment/insertComment',value)
 			console.log(res.data.content)
-			dispatch(getAllComment(value.taskId))
+			await dispatch(getAllComment(value.taskId))
+			next({
+				type:HIDE_LOADING
+			})
 		}catch(err){
 			console.log(err)
+			next({
+				type:HIDE_LOADING
+			})
 		}
 	}
 }
